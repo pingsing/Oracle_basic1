@@ -275,7 +275,7 @@ AND job IN('MANAGER', 'CLERK')
 AND ename NOT LIKE '_L%';
 
 --함수
---문자함수
+--문자함수: upper, lower, substr, instr, replace, lpad, rpad, concat
 --숫자함수
 --날짜함수
 
@@ -314,5 +314,41 @@ FROM dual;
 SELECT 'Welcome to Oracle',replace('Welcome to Oracle', 'to', 'of')
 FROM dual;
 
-SELECT 'oracle',LPAD('oracle', 10, '#'),RPAD('oracle',10,'*')
+SELECT 'oracle',LPAD('oracle', 10, '#'),RPAD('oracle',10,'*'),LPAD('oracle',10)
 FROM dual;
+
+SELECT RPAD('001103-',14,'*')
+FROM dual;
+
+SELECT concat(empno, ename), empno || '' || ename
+FROM emp;
+
+---숫자---
+SELECT
+    ROUND(1234.5678),
+    ROUND(1234.5678,0),
+    ROUND(1234.5678,1),
+    ROUND(1234.5678,2),
+    ROUND(1234.5678,-1)
+FROM dual;
+
+SELECT
+    ROUND(1234.5678),
+    ROUND(1234.5678,0),
+    ROUND(1234.5678,1),
+    ROUND(1234.5678,2)
+FROM dual;  
+
+SELECT
+CEIL(3.14),     --자신보다 큰 가장 가까운 정수 4
+FLOOR(3.14),    --자신보다 작은 가장 가까운 정수 3
+CEIL(-3.14),    -- -3
+FLOOR(-3.14)    -- -4
+FROM dual;
+
+SELECT MOD(5,2), MOD(10,4)
+FROM dual;
+
+SELECT *
+FROM emp
+WHERE MOD(empno, 2) = 1;
