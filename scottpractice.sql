@@ -606,3 +606,249 @@ where deptno != 10
 group by deptno
 having avg(sal) >= 2000;
 
+--조인(Join)
+--2개 이상의 테이블에서 데이터를 조회
+--from절에 두 개 이상의 테이블을 작성한다.
+--cross join (where절 없이 조인)
+--equi join (where 등가연산자: =)
+--non equi join(where 범위연산자: and, or)
+--self join (where 하나의 테이블을 사용한다)
+--out join (where에 누락되는 데이터를 같이 조회하기위한 연산자: (+))
+
+select emp.ename,emp.job,emp.deptno,dept.dname,dept.loc
+from emp,dept
+where emp.deptno = dept.deptno;
+
+select ename,job,emp.deptno,dname,loc
+from emp,dept
+where emp.deptno = dept.deptno;
+
+select ename,job,e.deptno,dname,loc
+from emp e,dept d   --테이블에 별칭 부여
+where e.deptno = d.deptno;
+
+select ename,job,e.deptno,dname,loc
+from emp e,dept d   --테이블에 별칭 부여
+where e.deptno = d.deptno
+and sal >= 3000;
+
+select ename,sal,grade
+from emp e,salgrade s
+where e.sal between s.losal and s.hisal;
+--where e.sal >= s.losal and e.sal <= s.hisal;
+
+--사원번호, 이름, 급여, 부서번호, 부서명, 급여등급
+select empno, ename, sal, d.deptno, dname, grade
+from emp e, dept d, salgrade s
+where e.deptno = d.deptno
+and e.sal between s.losal and s.hisal;
+
+--self join
+select *
+from emp;
+
+select e.empno, e.ename, e.mgr, m.ename as 사수
+from emp e, emp m   --반드시 별칭부여
+where e.mgr = m.empno;
+
+--scott 같은 부서에 근무하는 사원
+select ename, deptno
+from emp;
+
+
+select work.ename, friend.ename
+from emp work, emp friend
+where work.deptno = friend.deptno
+and work.ename = 'SCOTT'
+and friend.ename = 'SCOTT';
+
+select ename, mgr
+from emp;
+
+select *
+from emp;
+
+--외부조인
+--등가 시 누락되는 데이터를 같이 조회하기 위해서 사용
+
+select e.empno, e.ename, e.mgr, m.ename
+from emp e, emp m   --반드시 별칭 부여
+where e.mgr = m.empno(+);   --데이터가 없는 테이블쪽에 (+)를 붙인다.
+
+select ename, sal, d.deptno, dname
+from emp e, dept d
+where e.deptno(+) = d.deptno;
+
+--ANSI-JOIN(표준조인 방식)
+--cross join
+--inner join(equi, non equi)
+--outer join( (+) ) //  [left, right, full] 방향 표시
+--natural join
+select ename, sal, dname, loc
+from emp e inner join dept d
+on e.deptno = d.deptno;
+
+select ename, sal, dname, loc
+from emp e inner join dept d
+using(deptno)   --
+where ename = 'SCOTT';
+
+select e.empno, e.ename, e.mgr, m.ename
+from emp e inner join emp m
+on e.mgr = m.empno;
+
+select e.empno, e.ename, e.sal, s.grade
+from emp e inner join salgrade s
+on e.sal between s.losal and s.hisal;
+
+select e.empno, e.ename, e.mgr, m.ename
+from emp e left outer join emp m -- 데이터가 있는 쪽을 지정한다.
+on e.mgr = m.empno;
+
+select e.empno, e.ename, e.sal, d.deptno, d.dname, s.grade
+from emp e inner join dept d
+on e.deptno = d.deptno
+inner join salgrade s
+on e.sal between s.losal and s.hisal;
+
+select e.ename, e.sal, d.deptno, d.dname
+from emp e right outer join dept d
+on e.deptno = d.deptno;
+
+--select ename, sal, d.deptno, dname
+--from emp e, dept d
+--where e.deptno(+) = d.deptno;
+
+--1번문제
+select d.deptno, d.dname, e.empno, e.ename, e.sal
+from emp e inner join dept d
+on e.deptno = d.deptno
+and e.sal > 2000
+order by d.deptno, sal, empno;
+
+select deptno, d.dname, e.empno, e.ename, e.sal
+from emp e inner join dept d
+using(deptno)
+where e.sal > 2000
+order by deptno, sal, empno;
+
+--2번문제
+select d.deptno, dname, trunc(avg(sal)) as AVG_SAL, max(sal) as MAX_SAL, min(sal) as MIN_SAL, count(d.deptno) as CNT
+from emp e inner join dept d
+on e.deptno = d.deptno
+group by d.deptno, dname;
+
+--3번문제
+select d.deptno, dname, empno, ename, job, sal
+from emp e right outer join dept d
+on e.deptno = d.deptno
+order by d.deptno, ename;
+
+--4번문제
+select d.deptno, d.dname, e.empno, e.ename, e.mgr, e.sal, e.deptno, s.losal, s.hisal, s.grade, e.mgr as MGR_EMPNO, m.ename AS MGR_ENAME
+from emp e right outer join dept d
+on e.deptno = d.deptno
+left outer join emp m
+on e.mgr = m.empno
+left outer join salgrade s
+on e.sal between s.losal and s.hisal
+order by d.deptno, e.empno;
+
+select deptno
+from emp
+where ename = 'SCOTT';
+
+select dname
+from dept
+where deptno = 20;
+
+select dname
+from dept
+where deptno = (
+    select deptno
+    from emp
+    where ename = 'SCOTT'
+);
+
+select ename, max(sal)
+from emp;
+
+select ename, sal
+from emp
+where sal = (
+    select max(sal)
+    from emp
+);
+
+--DALLAS
+--이름, 부서번호
+
+select ename, deptno
+from emp
+where deptno = (
+    select deptno
+    from dept
+    where loc = 'DALLAS'
+);
+
+--자신의 직속상관이 KING인 사원의 이름과 급여를 조회하세요(서브쿼리)
+select *
+from emp;
+
+select ename, sal
+from emp
+where mgr = (
+    select empno
+    from emp
+    where ename = 'KING'
+);
+
+-- 다중행 서브쿼리
+--in: 결과 중에 하나만 만족하면 된다.
+-- > any: 결과 중에 가장 작은값보다 크면 된다
+-- > all: 결과 중에 가장 큰 값보다 크면 된다
+
+--in 연산자
+select *
+from emp
+where sal in (5000, 3000, 2850);
+
+select *
+from emp
+where sal in (
+    select max(sal)
+    from emp
+    group by deptno
+);
+
+--any 연산자
+select *
+from emp
+where sal > any (   --항상 부등호를 사용해야 한다.
+    select max(sal)
+    from emp
+    group by deptno
+);
+
+select *
+from emp
+where sal < any (   --항상 부등호를 사용해야 한다.
+    select max(sal)
+    from emp
+    group by deptno
+);
+
+--all 연산자
+select ename, sal
+from emp
+where sal > all(select sal
+    from emp
+    where deptno = 30);
+    
+select *
+from emp
+where (deptno, sal) in (
+    select deptno, max(sal)
+    from emp
+    group by deptno
+);

@@ -30,5 +30,35 @@ from emp;
 select ename, sal, sal*12+comm, comm
 from emp;
 
+--실습 4-10, 곱하기를 사용하지 않고 사원의 연간 총 수입 출력하기
 select ename, sal, sal+sal+sal+sal+sal+sal+sal+sal+sal+sal+sal+sal+comm, comm
 from emp;
+
+--실습 4-11, 별칭을 사용하여 사원의 연간 총 수입 출력하기
+select ename, sal, sal*12+comm as ANNSAL, comm
+from emp;
+
+--실습 4-12, EMP 테이블의 모든 열을 급여 기준으로 오름차순 정렬하기
+select *
+from emp
+order by sal;
+
+--실습 4-13, EMP 테이블의 모든 열을 급여 기준으로 내림차순 정렬하기
+select *
+from emp
+order by sal desc;
+
+--실습 4-14, EMP 테이블의 전체 열을 부서 번호(오름차순)와 급여(내림차순)로 정렬하기
+select *
+from emp
+order by deptno asc, sal ,desc;
+
+--Q2
+select job
+from emp
+group by job;
+
+--Q3
+select empno as EMPLOYEE_NO, ename as EMPLOYEE_NAME, mgr as MANAGER, sal as SALARY, comm as COMMISSION, deptno as DEPARTMENT_NO
+from emp
+order by DEPARTMENT_NO desc, EMPLOYEE_NAME asc; 
