@@ -702,7 +702,7 @@ from emp e inner join salgrade s
 on e.sal between s.losal and s.hisal;
 
 select e.empno, e.ename, e.mgr, m.ename
-from emp e left outer join emp m -- 데이터가 있는 쪽을 지정한다.
+from emp e full outer join emp m -- 데이터가 있는 쪽을 지정한다.
 on e.mgr = m.empno;
 
 select e.empno, e.ename, e.sal, d.deptno, d.dname, s.grade
@@ -710,6 +710,10 @@ from emp e inner join dept d
 on e.deptno = d.deptno
 inner join salgrade s
 on e.sal between s.losal and s.hisal;
+
+select e.ename, e.sal, d.deptno, d.dname
+from emp e inner join dept d
+on e.deptno = d.deptno;
 
 select e.ename, e.sal, d.deptno, d.dname
 from emp e right outer join dept d
@@ -753,6 +757,9 @@ on e.mgr = m.empno
 left outer join salgrade s
 on e.sal between s.losal and s.hisal
 order by d.deptno, e.empno;
+
+-- 서브쿼리
+-- select 구문을 중첩해서 사용하는 것(where)
 
 select deptno
 from emp
@@ -852,3 +859,366 @@ where (deptno, sal) in (
     from emp
     group by deptno
 );
+
+--DML(데이터조작어): insert, update, delete
+--insert: 테이블에 데이터 삽입
+--insert into 테이블명 (컬럼명1, 컬럼명2,...)
+--values (값1, 값2, ...)
+--컬럼과 값의 타입과 갯수가 일치해야 한다.
+--작성 순서대로 1:1 매칭된다.
+
+--테이블 생성하기
+create table dept_temp
+as
+select * from dept;
+
+select *
+from dept_temp;
+
+--테이블 데이터 삽입
+insert into dept_temp (deptno, dname, loc)
+values (50,'DATABASE','SEOUL');
+
+insert into dept_temp --컬럼 생략, 모든 컬럼에 데이터를 넣겠다는 의미
+values (70,'HTML','SEOUL');
+
+insert into dept_temp (deptno, dname)  --묵시적 NULL 데이터 삽입
+values(60,'JSP');
+
+insert into dept_temp   --컬럼생략, 명시적 NULL 데이터 삽입
+values (80, NULL, 'SEOUL');
+
+create table emp_temp
+as
+select * from emp
+where 1 != 1;
+
+select *
+from emp_temp;
+
+insert into emp_temp(empno, ename, job, mgr, hiredate, sal, comm, deptno)
+values (9999, '홍길동', 'PRESIDENT', NULL, '2001/01/01', 5000, 1000, 10);
+
+insert into emp_temp(empno, ename, job, mgr, hiredate, sal, comm, deptno)
+values (3111, '심청이', 'MANAGER', 9999, SYSDATE, 4000, NULL, 30);
+
+--update: 컬럼의 데이터를 변경(수정)
+--update 테이블명
+--set 컬럼명 = 값, 컬럼명 = 값 ...
+--where 조건식
+--조건식을 사용하지 않으면 해당 컬럼이 모두 변경된다.
+
+drop table dept_temp2;  -- 테이블 삭제
+
+create table dept_temp2
+as
+select * from dept;
+
+select *
+from dept_temp2;
+
+update dept_temp2
+set loc = 'SEOUL';
+
+update dept_temp2
+set dname = 'DATABASE', loc = 'SEOUL'
+where deptno = 40;
+
+--delete(데이터 삭제)
+--delete from 테이블명
+--where 조건식
+--조건절을 사용하지 않으면 모든 데이터가 삭제된다.
+
+drop table emp_temp2;
+
+create table emp_temp2
+as
+select * from emp;
+
+select *
+from emp_temp2;
+
+delete from emp_temp2
+where ename = 'SCOTT';
+
+--TCL(데이터의 영구저장 또는 취소)
+--트랜젝션
+--commit, rollback, savepoint
+
+--commit: 데이터 영구저장(테이블이 데이터 반영)
+--create구문을 사용해서 객체 생성할 때
+
+--rollback: 데이터 변경 취소(테이블이 데이터 미반영), 원상복구
+--천재지변, 절전 등 자동
+
+--drop, 테이블 제거
+drop table dept01;
+
+--delete, 테이블 항목 제거
+delete from dept01;
+
+--truncate, 롤백이 불가능한 delete
+truncate table dept01;
+
+create table dept01
+as
+select * from dept;
+
+select *
+from dept01;
+
+--commit
+commit;
+
+--rollback
+rollback;
+
+--DDL(데이터 정의어): table을 생성, 삭제, 변경할 때 사용한다.
+--create(생성), alter(변경), drop(삭제)
+
+create table 테이블명(  --table(객체)
+    컬럼명1 타입,    --column(속성)
+    컬럼명2 타입,
+    컬럼명3 타입
+);
+
+-- 테이블 생성
+create table emp_pt(
+    --사원번호, 사원이름, 직책, 관리자, 입사일자, 급여, 성과급, 부서번호
+    empno number(4),
+    ename varchar2(10), --byte
+    job varchar2(9),
+    mgr number(4),
+    hiredate date,
+    sal number(7,2),
+    comm number(7,2),
+    deptno number(2)
+);
+
+select *
+from emp_pt1;
+
+insert into emp_pt1(empno, ename, job, mgr, hiredate, sal, comm, deptno)
+values (9999, '이순신', 'PRESIDENT', NULL, '2001/01/01', 5000, 1000, 10);
+
+--테이블의 복사
+create table dept_ddl
+as
+select * from dept;
+
+--테이블의 일부분 복사
+create table dept_30
+as
+select * from dept
+where deptno = 30;
+
+create table dept_m
+as
+select dname, loc
+from dept;
+
+select * from dept_d;
+
+--테이블의 구조만 복사
+create table dept_d
+as
+select * from dept
+where 1 != 1;
+
+--테이블 변경(컬럼의 정보 수정)
+--새로운 컬럼추가, 
+--alter
+
+create table emp_alter
+as
+select * from emp;
+
+select * from emp_alter;
+
+--add, 컬럼 추가
+alter table emp_alter
+add address varchar2(100);
+
+--rename, 컬럼 이름 변경
+alter table emp_alter
+rename column address to addr;
+
+--modify, 타입 크기 늘리기
+alter table emp_alter
+modify empno number(10);
+
+desc emp_alter;
+
+--drop, 컬럼 삭제, 롤백 불가.
+alter table emp_alter
+drop column addr;
+
+drop table emp_alter;
+
+select *
+from emp_alter;
+
+
+--문제 풀기
+
+create table CHAP10HW_EMP as select * from emp;
+create table CHAP10HW_DEPT as select * from dept;
+create table CHAP10HW_SALGRADE as select * from salgrade;
+
+select * from chap10hw_dept;
+
+--Q1
+insert into chap10hw_dept
+values (50, 'ORACLE', 'BUSAN');
+
+insert into chap10hw_dept
+values(60, 'SQL', 'ILSAN');
+
+insert into chap10hw_dept
+values(70, 'SELECT', 'INCHEON');
+
+insert into chap10hw_dept
+values(80, 'DML', 'BUNDANG');
+
+select * from chap10hw_emp order by deptno;
+
+--Q2
+insert into chap10hw_emp
+values(7201, 'TEST_USER1', 'MANAGER', 7788, '2016-01-02', 4500, NULL, 50);
+
+insert into chap10hw_emp
+values(7202, 'TEST_USER2', 'CLERK', 7201, '2016-02-21', 1800, NULL, 50);
+
+insert into chap10hw_emp
+values(7203, 'TEST_USER3', 'ANALYST', 7201, '2016-04-11', 3400, NULL, 60);
+
+insert into chap10hw_emp
+values(7204, 'TEST_USER4', 'SALESMAN', 7201, '2016-05-31', 2700, 300, 60);
+
+insert into chap10hw_emp
+values(7205, 'TEST_USER5', 'CLERK', 7201, '2016-07-20', 2600, NULL, 70);
+
+insert into chap10hw_emp
+values(7206, 'TEST_USER6', 'CLERK', 7201, '2016-09-08', 2600, NULL, 70);
+
+insert into chap10hw_emp
+values(7207, 'TEST_USER7', 'LECTURER', 7201, '2016-10-28', 2300, NULL, 80);
+
+insert into chap10hw_emp
+values(7208, 'TEST_USER8', 'STUDENT', 7201, '2018-03-09', 1200, NULL, 80);
+
+--Q3
+update chap10hw_emp
+set deptno = 70
+where sal > (select avg(sal) from chap10hw_emp where deptno = 50);
+
+--Q4
+update chap10hw_emp
+set deptno = 80, sal = sal * 1.1
+where hiredate > (select min(hiredate) from chap10hw_emp where deptno = 60);
+
+select *
+from chap10hw_salgrade;
+
+--Q5
+delete from chap10hw_emp
+where empno in (select e.empno from chap10hw_emp e, chap10hw_salgrade s where e.sal between s.losal and s.hisal and s.grade = 5);
+
+
+--사용자 테이블 조회
+desc user_tables;
+
+select table_name
+from user_tables;
+
+select table_name
+from all_tables;
+
+select owner, table_name
+from all_tables;
+
+--index(검색속도를 향상하기 위해 사용하는 객체)
+--select 구문의 검속을 향상시킨다.
+--전체 레코드의 3% ~ 5% 정도일 때.
+--index 객체를 컬럼에 생성해서 사용한다.
+
+create index 인덱스명
+on 테이블명(컬럼명);
+
+create table emp01
+as
+select * from emp;
+
+select *
+from emp01;
+
+insert into emp01
+select * from emp01;
+
+insert into emp01(empno, ename)
+values (1111, 'BTS');
+
+select empno, ename
+from emp01
+where ename = 'BTS';
+
+--인덱스 생성
+create index idx_emp01_ename
+on emp01(ename);
+
+select empno, ename
+from emp01
+where ename = 'BTS';
+
+drop index idx_emp01_ename;
+
+--버린 테이블 조회
+show recyclebin;
+
+flashback table emp_alter
+to before drop;
+
+--제약조건(무결성): 잘못된 값이 데이터로 사용되는 것을 방지
+--not null
+--unique
+--primary key(기본키)
+--foreign key
+--check
+
+--emp, dept
+insert into emp
+values (1111, 'aaa', 'MANAGER', 9999, SYSDATE, 1000, NULL, 50);
+
+--ORA-02291: 무결성 제약조건(SCOTT.FK_DEPTNO)이 위배되었습니다- 부모 키가 없습니다
+
+drop table emp02;
+
+delete from emp02;
+
+--constraint: 제약조건 별칭 부여
+--constraint 제약조건을 알아볼 수 있는 별칭
+create table emp02(
+    empno number(4) constraint emp01_empno_pk primary key, --not null unique,
+    ename varchar2(10) constraint emp01_ename_nn not null,
+    job varchar2(9),
+    deptno number(2)
+);
+
+insert into emp02
+values (null, null, 'MANAGER', 30);
+
+select * from emp02;
+
+insert into emp02
+values (1111, '홍길동', 'MANAGER', 30);
+
+insert into emp02
+values (2222, '홍길동', 'MANAGER', 30);
+
+insert into emp02
+values (null, '김유신', 'SALESMAN', 20);
+--ORA-01400: NULL을 ("SCOTT"."EMP02"."EMPNO") 안에 삽입할 수 없습니다
+
+insert into emp02
+values (2222, '옥동자', 'SALESMAN', 10);
+--ORA-00001: 무결성 제약 조건(SCOTT.SYS_C0011065)에 위배됩니다
