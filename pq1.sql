@@ -176,3 +176,115 @@ select *
 from emp
 where sal not between 2000 and 3000;
 
+--실습 5-20, LIKE 연산자 사용하여 출력하기
+select *
+from emp
+where ename like 'S%';
+
+--실습 5-21, 사원 이름의 두 번째 글자가 L인 사원만 출력하기
+select *
+from emp
+where ename like '_L%';
+
+--실습 5-22, 사원 이름에 AM이 포함되어 있는 사원 데이터만 출력하기
+select *
+from emp
+where ename like '%AM%';
+
+--실습 5-23, 사원 이름에 AM이 포함되어 있지 않은 사원 데이터 출력하기
+select *
+from emp
+where ename not like '%AM%';
+
+--실습 5-24, 별칭을 사용하여 열 이름 출력하기
+select ename, sal, sal*12+comm as ANNSAL, comm
+from emp;
+
+--실습 5-25, 등가 비교 연산자로 NULL 비교하기
+select *
+from emp
+where comm = NULL;
+
+--실습 5-26, IS NULL 연산자를 사용하여 출력하기
+select *
+from emp
+where comm is null;
+
+--실습 5-27, 직속 상관이 있는 사원 데이터만 출력하기
+select *
+from emp
+where mgr is not null;
+
+--실습 5-28, AND 연산자와 IS NULL 연산자 사용하기
+select *
+from emp
+where sal > null
+and comm is null;
+
+--실습 5-29, OR 연산자와 IS NULL 연산자 사용하기
+select *
+from emp
+where sal > null
+or comm is null;
+
+--실습 5-30, 집합 연산자(UNION)를 사용하여 출력하기
+select empno, ename, sal, deptno
+from emp
+where deptno = 10
+UNION
+select empno, ename, sal, deptno
+from emp
+where deptno = 20;
+
+--실습 5-31, 집합 연산자(UNION)를 사용하여 출력하기(출력 열 개수가 다를 때)
+select empno, ename, sal, deptno
+from emp
+where deptno = 10
+UNION
+select empno, ename, sal
+from emp
+where deptno = 20;
+
+--실습 5-32, 집합 연산자(UNION)를 사용하여 출력하기(출력 열의 자료형이 다를 때)
+select empno, ename, sal, deptno
+from emp
+where deptno = 10
+UNION
+select ename, empno, deptno, sal
+from emp
+where deptno = 20;
+
+--실습 5-33, 집합 연산자(UNION)를 사용하여 출력하기(출력 열의 자료형이 같을 때)
+select empno, ename, sal, deptno
+from emp
+where deptno = 10
+UNION
+select sal, job, deptno, sal
+from emp
+where deptno = 20;
+
+--실습 5-34, 집합 연산자(UNION)를 사용하여 출력하기(출력 결과 데이터가 같을 때)
+select empno, ename, sal, deptno
+from emp
+where deptno = 10
+UNION
+select empno, ename, sal, deptno
+from emp
+where deptno = 10;
+
+--실습 5-35, 집합 연산자(UNION)를 사용하여 출력하기(출력 결과 데이터가 같을 때)
+select empno, ename, sal, deptno
+from emp
+where deptno = 10
+UNION ALL   --중복 값도 출력
+select empno, ename, sal, deptno
+from emp
+where deptno = 10;
+
+--실습 5-36. 집힙 연산자(MINUS)를 사용하여 출력하기
+select empno, ename, sal, deptno
+from emp
+MINUS
+select empno, ename, sal, deptno
+from emp
+where deptno = 10;

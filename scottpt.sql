@@ -1509,3 +1509,4 @@ group by d.dname;
 
 select *
 from sal_view;
+
