@@ -62,3 +62,117 @@ group by job;
 select empno as EMPLOYEE_NO, ename as EMPLOYEE_NAME, mgr as MANAGER, sal as SALARY, comm as COMMISSION, deptno as DEPARTMENT_NO
 from emp
 order by DEPARTMENT_NO desc, EMPLOYEE_NAME asc; 
+
+--실습 5-1, EMP 테이블의 모든 열 출력하기
+select *
+from emp;
+
+--실습 5-2, 부서 번호가 30인 데이터만 출력하기
+select *
+from emp
+where deptno = 30;
+
+--1min pt, 다음 SQL문의 결과로 사원 번호가 7782인 사원 정보만 나오도록 코드를 채워 보세요.
+select *
+from emp
+where empno = 7782;
+
+--실습 5-3, AND 연산자로 여러 개의 조건식 사용하기
+select *
+from emp
+where deptno = 30
+and job = 'SALESMAN';
+
+--1min pt, 사원 번호가 7499이고 부서 번호가 30인 사원 정보만 나오도록 코드를 채워 보세요.
+select *
+from emp
+where empno = 7499
+and deptno = 30;
+
+--실습 5-4,OR 연산자로 여러 개의 출력 조건 사용하기
+select *
+from emp
+where deptno = 30
+or job = 'CLERK';
+
+--실습 5-5, 곱셉 산술 연산자를 사용한 예
+select *
+from emp
+where sal * 12 = 36000;
+
+
+--실습 5-6, 대소 비교 연산자를 사용하여 출력하기
+select *
+from emp
+where sal >= 3000;
+
+--실습 5-7, 문자를 대소 비교 연산자로 비교하기(비교 문자열이 문자 하나일 때).
+select *
+from emp
+where ename >= 'F';
+
+--실습 5-8, 문자열을 대소 비교 연산자로 비교하기(비교 문자열이 문자 여러 개일 때)
+select *
+from emp
+where ename <= 'FORZ';
+
+--실습 5-9, 등가 비교 연산자(!=)를 사용하여 출력하기
+select *
+from emp
+where sal != 3000;
+
+--실습 5-10, 등가 비교 연산자(<>)를 사용하여 출력하기
+select *
+from emp
+where sal <> 3000;
+
+--실습 5-11, 등가 비교 연산자(^=)를 사용하여 출력하기
+select *
+from emp
+where sal ^= 3000;
+
+--실습 5-12, NOT 연산자를 사용하여 출력하기
+select *
+from emp
+where not sal = 3000;
+
+--실습 5-13, OR 연산자를 사용하여 여러 개 조건을 만족하는 데이터 출력하기
+select *
+from emp
+where job = 'MANAGER'
+or job = 'SALESMAN'
+or job = 'CLERK';
+
+--실습 5-14, IN 연산자를 사용하여 출력하기
+select *
+from emp
+where job in ('MANAGER', 'SALESMAN', 'CLERK');
+
+--실습 5-15. 등가 비교 연산자와 AND 연산자를 사용하여 출력하기
+select *
+from emp
+where job != 'MANAGER'
+and job <> 'SALESMAN'
+and job ^= 'CLERK';
+
+--실습 5-16, IN 연산자와 논리 부정 연산자를 사용하여 출력하기
+select *
+from emp
+where job not in('MANAGER', 'SALESMAN', 'CLERK');
+
+--실습 5-17, 대소 비교 연산자와 AND 연산자를 사용하여 출력하기
+select *
+from emp
+where sal >= 2000
+and sal <= 3000;
+
+--실습 5-18, BETWEEN A AND B 연산자를 사용하여 출력하기
+select *
+from emp
+where sal between 2000 and 3000;
+
+--실습 5-19, BETWEEN A AND B 연산자와 NOT 연산자를 사용하여 출력하기
+select *
+from emp
+where sal not between 2000 and 3000;
+
