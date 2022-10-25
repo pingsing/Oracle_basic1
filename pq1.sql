@@ -281,10 +281,78 @@ select empno, ename, sal, deptno
 from emp
 where deptno = 10;
 
---실습 5-36. 집힙 연산자(MINUS)를 사용하여 출력하기
+--실습 5-36. 집합 연산자(MINUS)를 사용하여 출력하기
 select empno, ename, sal, deptno
 from emp
 MINUS
 select empno, ename, sal, deptno
 from emp
 where deptno = 10;
+
+--실습 5-37, 집합 연산자(INTERSECT)를 사용하여 출력하기
+select empno, ename, sal, deptno
+from emp
+intersect
+select empno, ename, sal, deptno
+from emp
+where deptno = 10;
+
+--Q1. EMP 테이블을 사용하여 다음과 같이 사원 이름(ENAME)이 S로 끝나는 사원 데이터를 모두 출력
+--하는 SQL문을 작성해 보세요.
+select *
+from emp
+where ename like '%S';
+
+--Q2. EMP 테이블을 사용하여 30번 부서(DEPTNO)에서 근무하고 있는 사원 중에 직책(JOB)이
+--SALESMAN인 사원의 번호, 이름, 직책, 급여, 부서 번호를 출력하는 SQL문을 작성해 보세요.
+select empno, ename, job, sal, deptno
+from emp
+where deptno = 30 and job = 'SALESMAN';
+
+--Q3. EMP 테이블을 사용하여 20번, 30번 부서에 근무하고 있는 사원 중 급여(SAL)가 2000 초
+--과인 사원을 다음 두 가지 방식의 SELECT문을 사용하여 사원 번호, 이름, 급여, 부서번호를
+--출력하는 SQL문을 작성해 보세요.
+
+--1. 집합 연산자를 사용하지 않은 방식
+select *
+from emp
+where (deptno = 20 or deptno = 30) and sal > 2000;
+
+--2. 집합 연산자를 사용한 방식
+select *
+from emp
+where deptno = 20 or deptno = 30
+intersect
+select *
+from emp
+where sal > 2000;
+
+--Q4. 이번에는 NOT BETWEEN A AND B 연산자를 쓰지 않고, 급여(SAL) 열 값이 2000 이상 3000
+--이하 범위 이외의 값을 가진 데이터만 출력하도록 SQL문을 작성해 보세요.
+select * from emp
+where not (sal >= 2000 and sal <= 3000);
+
+--Q5. 사원 이름에 E가 포함되어 있는 30번 부서의 사원 중 급여가 1000~2000 사이가 아닌
+--사원 이름, 사원 번호, 급여, 부서 번호를 출력하는 SQL문을 작성해 보세요.
+select ename, empno, sal, deptno from emp
+where ename like '%E%' and deptno = 30
+intersect
+select ename, empno, sal, deptno from emp
+where sal not between 1000 and 2000;
+
+--Q6. 추가 수당이 존재하지 않고 상급자가 있고 직책이 MANAGER, CLERK인 사원 중에서 사원 이름
+--의 두 번째 글자가 L이 아닌 사원의 정보를 출력하는 SQL문을 작성해 보세요.
+select * from emp
+where comm is null and
+mgr is not null and
+job in ('MANAGER', 'CLERK') and
+ename not like '_L%';
+
+--함수란?
+--함수(function)는 수학에서 정의한 개념으로 x와 y 변수가 존재하고 x 값이 변하면 그 변화에 따라 
+--어떤 연산 또는 가공을 거쳐 y 값도 함께 변할 때 이 y를 함수라고 합니다. x 값의 변화에 따라 y값이
+--종속적으로 변하기 때문에 '따름수'라고도 합니다.
+
+--실습 6-1, UPPER, LOWER, INITCAP 함수 사용하기
+select ename, upper(ename), lower(ename), initcap(ename) from emp;
+

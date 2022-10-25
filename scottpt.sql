@@ -1616,6 +1616,10 @@ from (
 where rm < 6;
 
 --sequence 시퀀스
+--자동으로 번호를 증가시키는 기능수행
+--create, drop
+--nextval, currval
+
 --create sequence 시퀀스명
 --start with --시작값 → 1
 --increment by --증가치 → 1
@@ -1644,10 +1648,39 @@ drop table emp01;
 
 create table emp01
 as
-select * from emp
+select empno, ename, hiredate from emp
 where 1 != 1;
 
 select * from emp01;
 
 insert into emp01
 values (emp_seq.nextval, 'hong', sysdate);
+
+drop table product;
+select * from product1;
+
+create table product1(
+    pid varchar(10),
+    pname varchar(10),
+    price number(5),
+    
+    constraint product_pid_pk primary key(pid)
+);
+
+create sequence idx_product_id
+start with 1000;
+
+insert into product1
+values ('pid' || idx_product_id.nextval, 'cheese', 500);
+
+drop sequence idx_product_id;
+
+--객체 권한은 해당 사용자 계정에서 가능
+--scott 접속
+grant select
+on scott.emp
+to mrole3;
+
+-- → system.sql로 이동
+
+--권한 회수
