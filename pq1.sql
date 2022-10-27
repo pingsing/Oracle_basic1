@@ -356,3 +356,100 @@ ename not like '_L%';
 --실습 6-1, UPPER, LOWER, INITCAP 함수 사용하기
 select ename, upper(ename), lower(ename), initcap(ename) from emp;
 
+--실습 6-2, UPPER 함수로 문자열 비교하기(사원 이름이 SCOTT인 데이터 찾기)
+select * from emp
+where upper(ename) = upper('scott');
+
+--실습 6-3, UPPER 함수로 문자열 비교하기(사원 이름에 SCOTT 단어를 포함한 데이터 찾기)
+select * from emp
+where upper(ename) like upper('%scott%');
+
+--실습 6-4, 선택한 열의 문자열 길이 구하기
+select ename, length(ename)
+from emp;
+
+--실습 6-5, 사원 이름의 길이가 5 이상인 행 출력하기
+select ename, length(ename)
+from emp
+where length(ename) >= 5;
+
+--실습 6-6, LENGTH 함수와 LENGTHB 함수 비교하기
+select length('한글'), lengthb('한글')
+from dual;
+
+--실습 6-7, SUBSTR 함수를 사용하는 예
+select job, substr(job, 1, 2), substr(job, 3, 2), substr(job, 5)
+from emp;
+
+--실습 6-8, SUBSTR 함수 안에 다른 함수(LENGTH) 함께 사용하기
+select job,
+    substr(job, -length(job)),
+    substr(job, -length(job), 2),
+    substr(job, -3)
+from emp;
+
+--실습 6-9, INSTR 함수로 문자열 데이터에서 특정 문자열 찾기
+select 
+instr('HELLO, ORACLE!', 'L') as instr_1,
+instr('HELLO, ORACLE!', 'L', 5) as instr_2,
+instr('HELLO, ORACLE!', 'L', 2, 2) as instr_3
+from dual;
+
+--실습 6-10, INSTR 함수로 사원 이름에 문자 S가 있는 행 구하기
+select *
+from emp
+where instr(ename, 'S') > 0;
+
+--실습 6-11, LIKE 연산자로 사원 이름에 문자 S가 있는 행 구하기
+select *
+from emp
+where ename like '%S%';
+
+--실습 6-12, REPLACE 함수로 문자열 안에 있는 특정 문자 바꾸기
+SELECT '010-1234-5678' AS replace_before,
+    REPLACE('010-1234-5678', '-', ' ') AS replace_1,
+    REPLACE('010-1234-5678', '-') AS replace_2
+FROM dual;
+
+--실습 6-13. LPAD, RPAD 함수 사용하여 출력하기
+SELECT 'Oracle',
+    LPAD('Oracle', 10, '#') AS lpad_1,
+    RPAD('Oracle', 10, '*') AS rpad_1,
+    LPAD('Oracle', 10) AS lpad_2,
+    RPAD('Oracle', 10) AS rpad_2
+FROM dual;
+
+--실습 6-14, RPAD 함수를 사용하여 개인정보 뒷자리 * 표시로 출력하기
+SELECT
+    RPAD('971225-', 14, '*') AS rpad_jmno,
+    RPAD('010-1234-', 13, '*') AS rpad_phone
+FROM dual;
+
+--실습 6-15, 두 열 사이에 콜론(:) 넣고 연결하기
+SELECT 
+    CONCAT(empno, ename),
+    CONCAT(empno, CONCAT(' : ', ename))
+FROM emp
+WHERE ename = 'SCOTT';
+
+--문자열 데이터를 연결하는 || 연산자
+SELECT 
+empno || ename,
+empno || ' : ' || ename
+FROM emp;
+
+--실습 6-16, TRIM 함수로 공백 제거하여 출력하기
+SELECT
+'[' || TRIM(' _ _Oracle_ _ ') || ']' AS trim,
+'[' || TRIM(LEADING FROM ' _ _Oracle_ _ ') || ']' AS trim_leading,
+'[' || TRIM(TRAILING FROM ' _ _Oracle_ _ ') || ']' AS trim_trailing,
+'[' || TRIM(BOTH FROM ' _ _Oracle_ _ ') || ']' AS trim_both
+FROM dual;
+
+--실습 6-17, TRIM 함수로 삭제할 문자 _ 삭제 후 출력하기
+SELECT
+'[' || TRIM('_' FROM '_ _Oracle_ _') || ']' AS trim,
+'[' || TRIM(LEADING '_' FROM '_ _Oracle_ _') || ']' AS trim_leading,
+'[' || TRIM(TRAILING '_' FROM '_ _Oracle_ _') || ']' AS trim_trailing,
+'[' || TRIM(BOTH '_' FROM '_ _Oracle_ _') || ']' AS trim_both
+FROM dual;
